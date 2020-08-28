@@ -24,7 +24,7 @@ for zfs_pool in `zpool list | awk '{print $1}'`; do
 echo "<prtg>"
 
 # ----------------------- Result for Capacity in % ----------------------------------
-        capacity_percent_used=`zpool list -H -o capacity | cut -d'%' -f1`
+        capacity_percent_used=`zpool list -H -o capacity $zfs_pool | cut -d'%' -f1`
 			echo "<result>"
 			echo "<value>$capacity_percent_used</value>"
 			echo "<channel>$zfs_pool Used Capacity</channel>"
