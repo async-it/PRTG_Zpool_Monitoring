@@ -19,7 +19,7 @@
 # Version 1.0 - Initial release
 
 
-for zfs_pool in `zpool list | tail -n 1 | awk '{print $1}'`; do
+for zfs_pool in `zpool list | awk '{print $1}'`; do
 
 echo "<prtg>"
 
