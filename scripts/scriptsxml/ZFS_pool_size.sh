@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Async IT Sàrl - 2020
+# Async IT Sàrl - Switzerland - 2020
 # Jonas Sauge
 
 # Inspired from the work of Manuel Wolff
@@ -21,43 +21,74 @@
 
 for zfs_pool in `zpool list | tail -n 1 | awk '{print $1}'`; do
 
-if [ -z "`zpool list | head -n 1 | grep CKPOINT`" ]; then
-        capacity_percent_used=`zpool list $zfs_pool | tail -n 1 | awk '{print $7}' | cut -d'%' -f1`
-		capacity_total=`zpool list $zfs_pool | tail -n 1 | awk '{print $2}' | cut -d'G' -f1 | cut -d'.' -f1`
-		capacity_used=`zpool list $zfs_pool | tail -n 1 | awk '{print $3}' | cut -d'G' -f1 | cut -d'.' -f1`
-		capacity_free=`zpool list $zfs_pool | tail -n 1 | awk '{print $4}' | cut -d'G' -f1 | cut -d'.' -f1`
-else
-        capacity_percent_used=`zpool list $zfs_pool | tail -n 1 | awk '{print $8}' | cut -d'%' -f1`
-		capacity_total=`zpool list $zfs_pool | tail -n 1 | awk '{print $2}' | cut -d'G' -f1 | cut -d'.' -f1`
-		capacity_used=`zpool list $zfs_pool | tail -n 1 | awk '{print $3}' | cut -d'G' -f1 | cut -d'.' -f1`
-		capacity_free=`zpool list $zfs_pool | tail -n 1 | awk '{print $4}' | cut -d'G' -f1 | cut -d'.' -f1`
-fi
-
 echo "<prtg>"
 
-echo "<result>"
-echo "<value>$capacity_percent_used</value>"
-echo "<channel>$zfs_pool Used Capacity</channel>"
-echo "<unit>Percent</unit>"
-echo "</result>"
+# ----------------------- Result for Capacity in % ----------------------------------
+        capacity_percent_used=`zpool list -H -o capacity | cut -d'%' -f1`
+			echo "<result>"
+			echo "<value>$capacity_percent_used</value>"
+			echo "<channel>$zfs_pool Used Capacity</channel>"
+			echo "<unit>Percent</unit>"
+			echo "</result>"
 
-echo "<result>"
-echo "<value>$capacity_total</value>"
-echo "<channel>$zfs_pool Total Size</channel>"
-echo "<CustomUnit>GigaByte</CustomUnit>"
-echo "</result>"
+# ----------------------- Result for Size ----------------------------------			
+		if [ -z "`zpool list -H -o size $zfs_pool | grep G`" ]; then
+			capacity_total=`zpool list -H -o size $zfs_pool | cut -d'T' -f1`
+			echo "<result>"
+			echo "<value>$capacity_total</value>"
+			echo "<float>1</float>"
+			echo "<channel>$zfs_pool Total Size</channel>"
+			echo "<CustomUnit>TeraByte</CustomUnit>"
+			echo "</result>"		
+		else
+			capacity_total=`zpool list -H -o size $zfs_pool | cut -d'G' -f1`
+			echo "<result>"
+			echo "<value>$capacity_total</value>"
+			echo "<float>1</float>"
+			echo "<channel>$zfs_pool Total Size</channel>"
+			echo "<CustomUnit>GigaByte</CustomUnit>"
+			echo "</result>"
+		fi
 
-echo "<result>"
-echo "<value>$capacity_used</value>"
-echo "<channel>$zfs_pool Allocated</channel>"
-echo "<CustomUnit>GigaByte</CustomUnit>"
-echo "</result>"
+# ----------------------- Result for allocated space ----------------------------------		
+		
+				if [ -z "`zpool list -H -o allocated $zfs_pool | grep G`" ]; then
+			capacity_used=`zpool list -H -o allocated $zfs_pool | cut -d'T' -f1`
+			echo "<result>"
+			echo "<value>$capacity_used</value>"
+			echo "<float>1</float>"
+			echo "<channel>$zfs_pool Allocated</channel>"
+			echo "<CustomUnit>TeraByte</CustomUnit>"
+			echo "</result>"		
+		else
+			capacity_used=`zpool list -H -o allocated $zfs_pool | cut -d'G' -f1`
+			echo "<result>"
+			echo "<value>$capacity_used</value>"
+			echo "<float>1</float>"
+			echo "<channel>$zfs_pool Allocated</channel>"
+			echo "<CustomUnit>GigaByte</CustomUnit>"
+			echo "</result>"
+		fi
 
-echo "<result>"
-echo "<value>$capacity_free</value>"
-echo "<channel>$zfs_pool Capacity Free</channel>"
-echo "<CustomUnit>GigaByte</CustomUnit>"
-echo "</result>"
+# ----------------------- Result for Free Space ----------------------------------		
+
+		if [ -z "`zpool list -H -o free $zfs_pool | grep G`" ]; then
+			capacity_free=`zpool list -H -o free $zfs_pool | cut -d'T' -f1`
+			echo "<result>"
+			echo "<value>$capacity_free</value>"
+			echo "<float>1</float>"
+			echo "<channel>$zfs_pool Capacity Free</channel>"
+			echo "<CustomUnit>TeraByte</CustomUnit>"
+			echo "</result>"		
+		else
+			capacity_free=`zpool list -H -o free $zfs_pool | cut -d'G' -f1`
+			echo "<result>"
+			echo "<value>$capacity_free</value>"
+			echo "<float>1</float>"
+			echo "<channel>$zfs_pool Capacity Free</channel>"
+			echo "<CustomUnit>GigaByte</CustomUnit>"
+			echo "</result>"
+		fi
 
 echo "</prtg>"
 done
