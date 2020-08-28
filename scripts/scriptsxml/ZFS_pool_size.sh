@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Async IT Sàrl - Switzerland
+# Async IT Sàrl - 2020
 # Jonas Sauge
 
 # Inspired from the work of Manuel Wolff
