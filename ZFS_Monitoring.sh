@@ -18,10 +18,10 @@
 # Version:
 # Version 1.0 - Initial release
 
-
-for zfs_pool in `zpool list | tail -n1 | awk '{print $1}'`; do
-
 echo "<prtg>"
+for zfs_pool in `zpool list | tail -n+2 | awk '{print $1}'`; do
+
+
 
 # ----------------------- Result for Capacity in % ----------------------------------
         capacity_percent_used=`zpool list -H -o capacity $zfs_pool | cut -d'%' -f1`
@@ -55,7 +55,7 @@ echo "<prtg>"
 				if [ -z "`zpool list -H -o allocated $zfs_pool | grep G`" ]; then
 			capacity_used=`zpool list -H -o allocated $zfs_pool | cut -d'T' -f1`
 			echo "<result>"
-			echo "<value>$capacity_used</value>"
+			echo "<value>$zfs_pool $capacity_used</value>"
 			echo "<float>1</float>"
 			echo "<channel>$zfs_pool Allocated</channel>"
 			echo "<CustomUnit>TeraByte</CustomUnit>"
@@ -90,5 +90,6 @@ echo "<prtg>"
 			echo "</result>"
 		fi
 
-echo "</prtg>"
+
 done
+echo "</prtg>"
