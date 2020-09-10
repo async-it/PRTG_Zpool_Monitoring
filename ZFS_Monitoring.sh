@@ -16,7 +16,8 @@
 
 
 # Version:
-# Version 1.0 - Initial release
+# Version 1.1 - Initial release
+# Version 1.2 - Fix format for multiple pools
 
 echo "<prtg>"
 for zfs_pool in `zpool list | tail -n+2 | awk '{print $1}'`; do
