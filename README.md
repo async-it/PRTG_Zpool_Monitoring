@@ -1,4 +1,4 @@
-# PRTG_Zpool_Monitoring
+# PRTG Zpool / ZFS Monitoring
 PRTG Script to monitor ZPool Capacity in %, total size and used size.
 Script handle Gigabyte and TeraByte capacities
 
