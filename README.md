@@ -2,6 +2,9 @@
 PRTG Script to monitor ZPool Capacity in %, total size and used size.
 Script handle Gigabyte and TeraByte capacities
 
+
+![PRTG Probes](https://ibb.co/mtBXkqt)
+
 # USE:
 # On the device side:
 Put script in /var/prtg/scriptsxml/ - if folder does not exist, create it
