@@ -20,7 +20,7 @@
 # Version 2.0 - clean code for detection
 
 
-for zfs_pool in `zpool list | tail -n1 | awk '{print $1}'`; do
+for zfs_pool in `zpool list | tail -n +1  | awk '{print $1}'`; do
 
 echo "<prtg>"
 
