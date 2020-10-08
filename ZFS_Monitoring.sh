@@ -19,10 +19,10 @@
 # Version 1.0 - Initial release
 # Version 2.0 - clean code for detection
 
-
-for zfs_pool in `zpool list | tail -n +1  | awk '{print $1}'`; do
-
 echo "<prtg>"
+
+for zfs_pool in `zpool list | tail -n +2  | awk '{print $1}'`; do
+
 
 # ----------------------- Result for Capacity in % ----------------------------------
         capacity_percent_used=`zpool list -H -o capacity $zfs_pool | cut -d'%' -f1`
@@ -76,5 +76,7 @@ echo "<prtg>"
 			echo "<channel>$zfs_pool Capacity Free</channel>"
 			echo "<CustomUnit>$capacity</CustomUnit>"
 			echo "</result>"		
-echo "</prtg>"
+
 done
+
+echo "</prtg>"
