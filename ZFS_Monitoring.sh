@@ -19,6 +19,10 @@
 # Version 1.0 - Initial release
 # Version 2.0 - clean code for detection
 
+# ------- Limits settings -----------
+limitmaxwarning=75
+limitmaxerror=85
+
 echo "<prtg>"
 
 for zfs_pool in `zpool list | tail -n +2  | awk '{print $1}'`; do
@@ -30,6 +34,9 @@ for zfs_pool in `zpool list | tail -n +2  | awk '{print $1}'`; do
 			echo "<value>$capacity_percent_used</value>"
 			echo "<channel>$zfs_pool Used Capacity</channel>"
 			echo "<unit>Percent</unit>"
+			echo "<LimitMode>1</LimitMode>"
+			echo "<LimitMaxWarning>$limitmaxwarning</LimitMaxWarning>"
+			echo "<LimitMaxError>$limitmaxerror</LimitMaxError>"
 			echo "</result>"
 
 # ----------------------- Result for Size ----------------------------------			
