@@ -18,6 +18,7 @@
 # Version:
 # Version 1.0 - Initial release
 # Version 2.0 - clean code for detection
+# Version 2.1 - Set value limits and allow to configure them
 
 # ------- Limits settings -----------
 limitmaxwarning=75
