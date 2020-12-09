@@ -7,6 +7,8 @@
 # https://github.com/schenklklopfer/PRTG-SSH-scripts/blob/master/ZFSPoolSize.sh
 
 # USE:
+# Server:
+#  Copy .OVL file in prtg_install_folder\lookups\custom On the server, Reload the OVL Files in "setup - administrative tools - Load Lookups and File Lists
 # On the device side:
 # 	Put script in /var/prtg/scriptsxml/ - if folder does not exist, create it
 # 	chmod +x the script to make it executable
@@ -19,15 +21,33 @@
 # Version 1.0 - Initial release
 # Version 2.0 - clean code for detection
 # Version 2.1 - Set value limits and allow to configure them
+# Version 2.2 - Add Zpool health check
 
-# ------- Limits settings -----------
+# ------- Settings -----------
 limitmaxwarning=75
 limitmaxerror=85
+# ------- End of settings -----------
+
+
 
 echo "<prtg>"
 
 for zfs_pool in `zpool list | tail -n +2  | awk '{print $1}'`; do
+# ----------------------- Result for Zpool Health  ----------------------------------
 
+zpool_health=$(zpool status $zfs_pool)
+
+if echo $zpool_health | egrep -wqi 'DEGRADED|FAULTED|OFFLINE|UNAVAIL|REMOVED|FAIL|DESTROYED|corrupt|cannot|unrecover' ; then
+		zpool_status=1
+		else 
+	    zpool_status=0
+		fi
+			echo "<result>"
+			echo "<value>$zpool_status</value>"
+			echo "<channel>$zfs_pool pool health</channel>"
+			echo "<ValueLookup>oid.status.okerror</ValueLookup>"
+			echo "<unit>Custom</unit>"
+			echo "</result>"
 
 # ----------------------- Result for Capacity in % ----------------------------------
         capacity_percent_used=`zpool list -H -o capacity $zfs_pool | cut -d'%' -f1`
